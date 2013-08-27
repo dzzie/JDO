@@ -4,6 +4,8 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JavaDeObfuscator
 {
@@ -11,12 +13,8 @@ namespace JavaDeObfuscator
 	{
 		TDeObfuscator DeObfuscator = null;
 		ArrayList Files = null;
-		RenameDatabase RenameStore = null;
-
-		private Label label1;
-		private OpenFileDialog OpenFileDialog;
-		private TextBox ClassFileTextBox;
-		private Button ButtonFileBrowse;
+        RenameDatabase RenameStore = null;
+        private OpenFileDialog OpenFileDialog;
 		private TreeView TreeClassView;
 		private Button ProcessButton;
 		private ToolTip ToolTip;
@@ -27,7 +25,21 @@ namespace JavaDeObfuscator
 		private Button btnOutput;
 		private Label label2;
 		private FolderBrowserDialog dlgOutput;
-		private CheckBox chkUseUniqueNums;
+        private CheckBox chkUseUniqueNums;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem addToolStripMenuItem;
+        private ToolStripMenuItem classesToolStripMenuItem1;
+        private ToolStripMenuItem directoryToolStripMenuItem;
+        private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem sequentiallyRenameToolStripMenuItem;
+        private ToolStripMenuItem classesToolStripMenuItem2;
+        private ToolStripMenuItem methodsTypesToolStripMenuItem;
+        private FolderBrowserDialog folderBrowserDialog1;
+        private ToolStripMenuItem clearAllToolStripMenuItem;
+        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStripMenuItem readmeToolStripMenuItem;
+        private ToolStripMenuItem changelogToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
 		private IContainer components;
 
 		/// <summary>
@@ -75,203 +87,276 @@ namespace JavaDeObfuscator
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.ClassFileTextBox = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.ButtonFileBrowse = new System.Windows.Forms.Button();
-			this.TreeClassView = new System.Windows.Forms.TreeView();
-			this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-			this.ProcessButton = new System.Windows.Forms.Button();
-			this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.RenameClassCheckBox = new System.Windows.Forms.CheckBox();
-			this.SmartRenameMethods = new System.Windows.Forms.CheckBox();
-			this.Progress = new System.Windows.Forms.ProgressBar();
-			this.txtOutput = new System.Windows.Forms.TextBox();
-			this.btnOutput = new System.Windows.Forms.Button();
-			this.label2 = new System.Windows.Forms.Label();
-			this.dlgOutput = new System.Windows.Forms.FolderBrowserDialog();
-			this.chkUseUniqueNums = new System.Windows.Forms.CheckBox();
-			this.SuspendLayout();
-			// 
-			// ClassFileTextBox
-			// 
-			this.ClassFileTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.ClassFileTextBox.Location = new System.Drawing.Point(82, 16);
-			this.ClassFileTextBox.Name = "ClassFileTextBox";
-			this.ClassFileTextBox.Size = new System.Drawing.Size(448, 20);
-			this.ClassFileTextBox.TabIndex = 0;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(13, 20);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(57, 13);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "Add Class:";
-			// 
-			// ButtonFileBrowse
-			// 
-			this.ButtonFileBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.ButtonFileBrowse.Location = new System.Drawing.Point(532, 16);
-			this.ButtonFileBrowse.Name = "ButtonFileBrowse";
-			this.ButtonFileBrowse.Size = new System.Drawing.Size(24, 20);
-			this.ButtonFileBrowse.TabIndex = 1;
-			this.ButtonFileBrowse.Text = "...";
-			this.ButtonFileBrowse.Click += new System.EventHandler(this.button1_Click);
-			// 
-			// TreeClassView
-			// 
-			this.TreeClassView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.TreeClassView.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.TreeClassView.Location = new System.Drawing.Point(8, 69);
-			this.TreeClassView.Name = "TreeClassView";
-			this.TreeClassView.ShowNodeToolTips = true;
-			this.TreeClassView.Size = new System.Drawing.Size(546, 330);
-			this.TreeClassView.TabIndex = 4;
-			this.TreeClassView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeClassView_NodeMouseClick);
-			// 
-			// OpenFileDialog
-			// 
-			this.OpenFileDialog.Filter = "Class Files|*.class";
-			this.OpenFileDialog.Multiselect = true;
-			// 
-			// ProcessButton
-			// 
-			this.ProcessButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.ProcessButton.Location = new System.Drawing.Point(454, 405);
-			this.ProcessButton.Name = "ProcessButton";
-			this.ProcessButton.Size = new System.Drawing.Size(100, 23);
-			this.ProcessButton.TabIndex = 8;
-			this.ProcessButton.Text = "Deobfuscate";
-			this.ProcessButton.Click += new System.EventHandler(this.ProcessButton_Click);
-			// 
-			// ToolTip
-			// 
-			this.ToolTip.IsBalloon = true;
-			// 
-			// RenameClassCheckBox
-			// 
-			this.RenameClassCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.RenameClassCheckBox.AutoSize = true;
-			this.RenameClassCheckBox.Checked = true;
-			this.RenameClassCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.RenameClassCheckBox.Location = new System.Drawing.Point(12, 409);
-			this.RenameClassCheckBox.Name = "RenameClassCheckBox";
-			this.RenameClassCheckBox.Size = new System.Drawing.Size(105, 17);
-			this.RenameClassCheckBox.TabIndex = 6;
-			this.RenameClassCheckBox.Text = "Rename Classes";
-			// 
-			// SmartRenameMethods
-			// 
-			this.SmartRenameMethods.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.SmartRenameMethods.AutoSize = true;
-			this.SmartRenameMethods.Checked = true;
-			this.SmartRenameMethods.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.SmartRenameMethods.Enabled = false;
-			this.SmartRenameMethods.Location = new System.Drawing.Point(252, 410);
-			this.SmartRenameMethods.Name = "SmartRenameMethods";
-			this.SmartRenameMethods.Size = new System.Drawing.Size(140, 17);
-			this.SmartRenameMethods.TabIndex = 7;
-			this.SmartRenameMethods.Text = "Smart Rename Methods";
-			// 
-			// Progress
-			// 
-			this.Progress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.Progress.Location = new System.Drawing.Point(12, 433);
-			this.Progress.Name = "Progress";
-			this.Progress.Size = new System.Drawing.Size(546, 15);
-			this.Progress.Step = 1;
-			this.Progress.TabIndex = 9;
-			this.Progress.Visible = false;
-			// 
-			// txtOutput
-			// 
-			this.txtOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.txtOutput.Location = new System.Drawing.Point(82, 43);
-			this.txtOutput.Name = "txtOutput";
-			this.txtOutput.Size = new System.Drawing.Size(448, 20);
-			this.txtOutput.TabIndex = 2;
-			// 
-			// btnOutput
-			// 
-			this.btnOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnOutput.Location = new System.Drawing.Point(532, 43);
-			this.btnOutput.Name = "btnOutput";
-			this.btnOutput.Size = new System.Drawing.Size(24, 20);
-			this.btnOutput.TabIndex = 3;
-			this.btnOutput.Text = "...";
-			this.btnOutput.Click += new System.EventHandler(this.btnOutput_Click);
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(12, 46);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(58, 13);
-			this.label2.TabIndex = 23;
-			this.label2.Text = "Output Dir:";
-			// 
-			// dlgOutput
-			// 
-			this.dlgOutput.Description = "Select output folder";
-			// 
-			// chkUseUniqueNums
-			// 
-			this.chkUseUniqueNums.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.chkUseUniqueNums.AutoSize = true;
-			this.chkUseUniqueNums.Checked = true;
-			this.chkUseUniqueNums.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkUseUniqueNums.Location = new System.Drawing.Point(123, 409);
-			this.chkUseUniqueNums.Name = "chkUseUniqueNums";
-			this.chkUseUniqueNums.Size = new System.Drawing.Size(123, 17);
-			this.chkUseUniqueNums.TabIndex = 7;
-			this.chkUseUniqueNums.Text = "Use unique numbers";
-			// 
-			// MainForm
-			// 
-			this.ClientSize = new System.Drawing.Size(565, 451);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.txtOutput);
-			this.Controls.Add(this.Progress);
-			this.Controls.Add(this.chkUseUniqueNums);
-			this.Controls.Add(this.SmartRenameMethods);
-			this.Controls.Add(this.RenameClassCheckBox);
-			this.Controls.Add(this.ProcessButton);
-			this.Controls.Add(this.TreeClassView);
-			this.Controls.Add(this.btnOutput);
-			this.Controls.Add(this.ButtonFileBrowse);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.ClassFileTextBox);
-			this.Name = "MainForm";
-			this.Text = "Java DeObfuscator v1.6b2";
-			this.Load += new System.EventHandler(this.Form1_Load);
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            this.components = new System.ComponentModel.Container();
+            this.TreeClassView = new System.Windows.Forms.TreeView();
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.ProcessButton = new System.Windows.Forms.Button();
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.RenameClassCheckBox = new System.Windows.Forms.CheckBox();
+            this.SmartRenameMethods = new System.Windows.Forms.CheckBox();
+            this.Progress = new System.Windows.Forms.ProgressBar();
+            this.txtOutput = new System.Windows.Forms.TextBox();
+            this.btnOutput = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dlgOutput = new System.Windows.Forms.FolderBrowserDialog();
+            this.chkUseUniqueNums = new System.Windows.Forms.CheckBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.classesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.directoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sequentiallyRenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.classesToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.methodsTypesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changelogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.menuStrip1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // TreeClassView
+            // 
+            this.TreeClassView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TreeClassView.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TreeClassView.Location = new System.Drawing.Point(8, 53);
+            this.TreeClassView.Name = "TreeClassView";
+            this.TreeClassView.ShowNodeToolTips = true;
+            this.TreeClassView.Size = new System.Drawing.Size(610, 346);
+            this.TreeClassView.TabIndex = 4;
+            this.TreeClassView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeClassView_NodeMouseClick);
+            // 
+            // OpenFileDialog
+            // 
+            this.OpenFileDialog.Filter = "Class Files|*.class";
+            this.OpenFileDialog.Multiselect = true;
+            // 
+            // ProcessButton
+            // 
+            this.ProcessButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ProcessButton.Location = new System.Drawing.Point(518, 405);
+            this.ProcessButton.Name = "ProcessButton";
+            this.ProcessButton.Size = new System.Drawing.Size(100, 23);
+            this.ProcessButton.TabIndex = 8;
+            this.ProcessButton.Text = "Deobfuscate";
+            this.ProcessButton.Click += new System.EventHandler(this.ProcessButton_Click);
+            // 
+            // ToolTip
+            // 
+            this.ToolTip.IsBalloon = true;
+            // 
+            // RenameClassCheckBox
+            // 
+            this.RenameClassCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.RenameClassCheckBox.AutoSize = true;
+            this.RenameClassCheckBox.Checked = true;
+            this.RenameClassCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.RenameClassCheckBox.Location = new System.Drawing.Point(12, 409);
+            this.RenameClassCheckBox.Name = "RenameClassCheckBox";
+            this.RenameClassCheckBox.Size = new System.Drawing.Size(105, 17);
+            this.RenameClassCheckBox.TabIndex = 6;
+            this.RenameClassCheckBox.Text = "Rename Classes";
+            // 
+            // SmartRenameMethods
+            // 
+            this.SmartRenameMethods.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.SmartRenameMethods.AutoSize = true;
+            this.SmartRenameMethods.Checked = true;
+            this.SmartRenameMethods.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SmartRenameMethods.Enabled = false;
+            this.SmartRenameMethods.Location = new System.Drawing.Point(252, 410);
+            this.SmartRenameMethods.Name = "SmartRenameMethods";
+            this.SmartRenameMethods.Size = new System.Drawing.Size(140, 17);
+            this.SmartRenameMethods.TabIndex = 7;
+            this.SmartRenameMethods.Text = "Smart Rename Methods";
+            // 
+            // Progress
+            // 
+            this.Progress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.Progress.Location = new System.Drawing.Point(12, 433);
+            this.Progress.Name = "Progress";
+            this.Progress.Size = new System.Drawing.Size(610, 15);
+            this.Progress.Step = 1;
+            this.Progress.TabIndex = 9;
+            this.Progress.Visible = false;
+            // 
+            // txtOutput
+            // 
+            this.txtOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtOutput.Location = new System.Drawing.Point(78, 27);
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.Size = new System.Drawing.Size(512, 20);
+            this.txtOutput.TabIndex = 2;
+            // 
+            // btnOutput
+            // 
+            this.btnOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOutput.Location = new System.Drawing.Point(596, 26);
+            this.btnOutput.Name = "btnOutput";
+            this.btnOutput.Size = new System.Drawing.Size(24, 20);
+            this.btnOutput.TabIndex = 3;
+            this.btnOutput.Text = "...";
+            this.btnOutput.Click += new System.EventHandler(this.btnOutput_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 34);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(58, 13);
+            this.label2.TabIndex = 23;
+            this.label2.Text = "Output Dir:";
+            // 
+            // dlgOutput
+            // 
+            this.dlgOutput.Description = "Select output folder";
+            // 
+            // chkUseUniqueNums
+            // 
+            this.chkUseUniqueNums.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkUseUniqueNums.AutoSize = true;
+            this.chkUseUniqueNums.Checked = true;
+            this.chkUseUniqueNums.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUseUniqueNums.Location = new System.Drawing.Point(123, 409);
+            this.chkUseUniqueNums.Name = "chkUseUniqueNums";
+            this.chkUseUniqueNums.Size = new System.Drawing.Size(123, 17);
+            this.chkUseUniqueNums.TabIndex = 7;
+            this.chkUseUniqueNums.Text = "Use unique numbers";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addToolStripMenuItem,
+            this.toolsToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(629, 24);
+            this.menuStrip1.TabIndex = 26;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // addToolStripMenuItem
+            // 
+            this.addToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.classesToolStripMenuItem1,
+            this.directoryToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.clearAllToolStripMenuItem});
+            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
+            this.addToolStripMenuItem.Text = "Add";
+            // 
+            // classesToolStripMenuItem1
+            // 
+            this.classesToolStripMenuItem1.Name = "classesToolStripMenuItem1";
+            this.classesToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
+            this.classesToolStripMenuItem1.Text = "Classes";
+            this.classesToolStripMenuItem1.Click += new System.EventHandler(this.classesToolStripMenuItem1_Click);
+            // 
+            // directoryToolStripMenuItem
+            // 
+            this.directoryToolStripMenuItem.Name = "directoryToolStripMenuItem";
+            this.directoryToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.directoryToolStripMenuItem.Text = "Directory";
+            this.directoryToolStripMenuItem.Click += new System.EventHandler(this.directoryToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
+            // 
+            // clearAllToolStripMenuItem
+            // 
+            this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.clearAllToolStripMenuItem.Text = "Start Over";
+            this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sequentiallyRenameToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // sequentiallyRenameToolStripMenuItem
+            // 
+            this.sequentiallyRenameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.classesToolStripMenuItem2,
+            this.methodsTypesToolStripMenuItem});
+            this.sequentiallyRenameToolStripMenuItem.Name = "sequentiallyRenameToolStripMenuItem";
+            this.sequentiallyRenameToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.sequentiallyRenameToolStripMenuItem.Text = "Sequentially Rename";
+            // 
+            // classesToolStripMenuItem2
+            // 
+            this.classesToolStripMenuItem2.Name = "classesToolStripMenuItem2";
+            this.classesToolStripMenuItem2.Size = new System.Drawing.Size(163, 22);
+            this.classesToolStripMenuItem2.Text = "Classes";
+            this.classesToolStripMenuItem2.Click += new System.EventHandler(this.classesToolStripMenuItem2_Click);
+            // 
+            // methodsTypesToolStripMenuItem
+            // 
+            this.methodsTypesToolStripMenuItem.Name = "methodsTypesToolStripMenuItem";
+            this.methodsTypesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.methodsTypesToolStripMenuItem.Text = "Methods / Fields";
+            this.methodsTypesToolStripMenuItem.Click += new System.EventHandler(this.methodsTypesToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.readmeToolStripMenuItem,
+            this.changelogToolStripMenuItem});
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // readmeToolStripMenuItem
+            // 
+            this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.readmeToolStripMenuItem.Text = "Readme";
+            this.readmeToolStripMenuItem.Click += new System.EventHandler(this.readmeToolStripMenuItem_Click);
+            // 
+            // changelogToolStripMenuItem
+            // 
+            this.changelogToolStripMenuItem.Name = "changelogToolStripMenuItem";
+            this.changelogToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.changelogToolStripMenuItem.Text = "Changelog";
+            this.changelogToolStripMenuItem.Click += new System.EventHandler(this.changelogToolStripMenuItem_Click);
+            // 
+            // MainForm
+            // 
+            this.ClientSize = new System.Drawing.Size(629, 451);
+            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.txtOutput);
+            this.Controls.Add(this.Progress);
+            this.Controls.Add(this.chkUseUniqueNums);
+            this.Controls.Add(this.SmartRenameMethods);
+            this.Controls.Add(this.RenameClassCheckBox);
+            this.Controls.Add(this.ProcessButton);
+            this.Controls.Add(this.TreeClassView);
+            this.Controls.Add(this.btnOutput);
+            this.MainMenuStrip = this.menuStrip1;
+            this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Java DeObfuscator v1.6b2_dz";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion
-
-		private void button1_Click(object sender, EventArgs e)
-		{
-			if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-			{
-				if (Files == null)
-					Files = new ArrayList();
-
-				foreach (String fn in OpenFileDialog.FileNames)
-				{
-					Files.Add(fn);
-				}
-
-				UpdateTree();
-			}
-		}
 
 		private void UpdateTree()
 		{
@@ -440,8 +525,14 @@ namespace JavaDeObfuscator
 
 			if (!Directory.Exists(txtOutput.Text))
 			{
-				MessageBox.Show("Output dir doesn't exists!", "Output", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
+                try { Directory.CreateDirectory(txtOutput.Text); }
+                catch (Exception ex) { }
+
+                if (!Directory.Exists(txtOutput.Text))
+                {
+                    MessageBox.Show("Output dir doesn't exists!", "Output", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 			}
 
 
@@ -579,6 +670,236 @@ namespace JavaDeObfuscator
 				txtOutput.Text = dlgOutput.SelectedPath;
 			}
 		}
+
+
+        //--------------------------------- sequential rename additions -------------------------
+
+        private void ChangeMethodOrFieldName(TreeNode Node, string newName)
+        {
+
+            try
+            {
+                // get the full path of the node we clicked on, so we have all the information
+                // relating to it
+                // get parentmost node
+                TreeNode pn = Node;
+                while (pn.Parent != null)
+                {
+                    pn = pn.Parent;
+                }
+
+                // get trailing node
+                TreeNode tn = Node;
+                while (tn.Nodes.Count > 0)
+                {
+                    tn = tn.Nodes[0];
+                }
+
+                string class_name = pn.Tag.ToString();                   // classname
+
+                string[] sl = tn.FullPath.Split('\\');
+                string type = sl[1];
+                string old_name = tn.Parent.Tag.ToString();
+
+                if (class_name == null || type == null ||
+                    old_name == null)
+                {
+                    return;
+                }
+
+                // check which subsection we are in, so we can add it to the right list
+                if (type == "Methods" || type == "Fields")
+                {
+                    string old_descriptor = sl[3];
+
+                    if (old_descriptor == null)
+                        return;
+
+                    if (type == "Methods")
+                    {
+                        RenameStore.AddRenameMethod(class_name, old_descriptor, old_name,
+                            old_descriptor, newName);
+                    }
+                    else if (type == "Fields")
+                    {
+                        RenameStore.AddRenameField(class_name, old_descriptor, old_name,
+                            old_descriptor, newName);
+                    }
+
+                    // update the tree without reloading it
+                    tn.Parent.Text = newName;
+                    tn.Parent.ToolTipText = "was '" + tn.Parent.Tag.ToString() + "'";
+                    tn.Parent.BackColor = Color.DodgerBlue;
+                }
+
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+        }
+
+        private void ChangeClassName(TreeNode Node, string newName)
+        {
+
+            try
+            {
+                string[] s = Node.Text.Split(':');
+
+                string old_name = s[0].Trim();
+                string old_descriptor = s[1].Trim();
+
+                if (s.Length == 0)
+                    return;
+
+                string new_name_and_type = newName + " : " + old_descriptor;
+                RenameStore.AddRenameClass(Node.Tag.ToString(), new_name_and_type);
+
+                Node.BackColor = Color.DodgerBlue;
+                Node.Text = new_name_and_type;
+                Node.ToolTipText = "was '" + Node.Tag.ToString() + "'";
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+        }
+
+        private void GetAllNodes(TreeNode treeNode, List<TreeNode> lst)
+        {
+            foreach (TreeNode tn in treeNode.Nodes)
+            {
+                lst.Add(tn);
+                GetAllNodes(tn, lst);
+            }
+        }
+
+        private void classesToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                if (Files == null)
+                    Files = new ArrayList();
+
+                foreach (String fn in OpenFileDialog.FileNames)
+                {
+                    Files.Add(fn);
+                }
+
+                if (txtOutput.Text.Length == 0 || !Directory.Exists(txtOutput.Text))
+                {
+                    try { txtOutput.Text = Directory.GetParent(Files[0].ToString()).FullName + "\\output\\"; }
+                    catch (Exception ex) { }
+                }
+
+                UpdateTree();
+            }
+        }
+
+        private void directoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if (Files == null)
+                    Files = new ArrayList();
+
+                string foldername = this.folderBrowserDialog1.SelectedPath;
+                foreach (string f in Directory.GetFiles(foldername))
+                {
+                    if(f.ToLower().EndsWith(".class")) Files.Add(f);
+                }
+
+                if (txtOutput.Text.Length == 0 || !Directory.Exists(txtOutput.Text))
+                {
+                    try { txtOutput.Text = Directory.GetParent(Files[0].ToString()).FullName + "\\output\\"; }
+                    catch (Exception ex) { }
+                }
+
+                UpdateTree();
+            }
+        }
+
+        private void classesToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            int i = 0;
+            foreach (TreeNode nn in TreeClassView.Nodes)
+            {
+                if (nn.Text.IndexOf(">") < 1)
+                {
+                    ChangeClassName(nn, "class_" + i.ToString());
+                    i++;
+                }
+            }
+        }
+
+        private void methodsTypesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<TreeNode> allNodes = new List<TreeNode>();
+            foreach (TreeNode n in TreeClassView.Nodes)
+            {
+                allNodes.Add(n);
+                GetAllNodes(n, allNodes);
+            }
+
+            Progress.Value = 0;
+            Progress.Maximum = allNodes.Count;
+            Progress.Visible = true;
+
+            foreach (TreeNode pn in allNodes)
+            {
+                if (pn.Text == "Methods" || pn.Text == "Fields")
+                {
+                    int i = 0;
+                    foreach (TreeNode cn in pn.Nodes)
+                    {
+                        if (cn.Text.IndexOf(">") < 1)
+                        {
+                            string nom = (pn.Text == "Methods" ? "sub_" : "field_");
+                            ChangeMethodOrFieldName(cn, nom + i.ToString());
+                            i++;
+                        }
+                    }
+
+                }
+                Progress.Value += 1;
+            }
+
+            Progress.Visible = false;
+        }
+
+        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Files = new ArrayList();
+            TreeClassView.Nodes.Clear();
+            RenameStore = new RenameDatabase();
+        }
+
+        private void findAndShow(string filename){
+            string pth = AppDomain.CurrentDomain.BaseDirectory;
+            for (int i = 0; i < 7; i++)
+            {
+                if (File.Exists(pth + "\\" + filename))
+                {
+                    Process.Start("notepad.exe", pth + "\\" + filename);
+                    return;
+                }
+                pth = Directory.GetParent(pth).ToString();
+            }
+        }
+
+        private void readmeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            findAndShow("readme");
+        }
+
+        private void changelogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            findAndShow("changelog.txt");
+        }
 
 
 	}
