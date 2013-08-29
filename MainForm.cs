@@ -6,7 +6,13 @@ using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+/* 
+ * todo:
+ *       convert method prototypes into standard source notation
+ *       batch renamer interface  ex: class_0 -> myCLass
+ *                                    myClass.sub_0 -> doDownload
+ * 
+ */ 
 namespace JavaDeObfuscator
 {
 	public class MainForm : System.Windows.Forms.Form
@@ -40,6 +46,12 @@ namespace JavaDeObfuscator
         private ToolStripMenuItem readmeToolStripMenuItem;
         private ToolStripMenuItem changelogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem mnuSequentiallyRenamePopup;
+        private ToolStripMenuItem copySelectedDataToolStripMenuItem;
+        private ToolStripMenuItem copyAllSubNodesToolStripMenuItem;
+        private ToolStripMenuItem batchRenamerToolStripMenuItem;
+        private ToolStripMenuItem extractImportsToolStripMenuItem;
 		private IContainer components;
 
 		/// <summary>
@@ -50,6 +62,7 @@ namespace JavaDeObfuscator
 		{
 			Application.EnableVisualStyles();
 			Application.Run(new MainForm());
+            Properties.Settings.Default.Reload();
 		}
 
 
@@ -110,11 +123,18 @@ namespace JavaDeObfuscator
             this.sequentiallyRenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.classesToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.methodsTypesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copySelectedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyAllSubNodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchRenamerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changelogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuSequentiallyRenamePopup = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractImportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TreeClassView
@@ -281,7 +301,11 @@ namespace JavaDeObfuscator
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sequentiallyRenameToolStripMenuItem});
+            this.sequentiallyRenameToolStripMenuItem,
+            this.copySelectedDataToolStripMenuItem,
+            this.copyAllSubNodesToolStripMenuItem,
+            this.batchRenamerToolStripMenuItem,
+            this.extractImportsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -309,6 +333,27 @@ namespace JavaDeObfuscator
             this.methodsTypesToolStripMenuItem.Text = "Methods / Fields";
             this.methodsTypesToolStripMenuItem.Click += new System.EventHandler(this.methodsTypesToolStripMenuItem_Click);
             // 
+            // copySelectedDataToolStripMenuItem
+            // 
+            this.copySelectedDataToolStripMenuItem.Name = "copySelectedDataToolStripMenuItem";
+            this.copySelectedDataToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.copySelectedDataToolStripMenuItem.Text = "Copy Sub Nodes";
+            this.copySelectedDataToolStripMenuItem.Click += new System.EventHandler(this.copySelectedDataToolStripMenuItem_Click);
+            // 
+            // copyAllSubNodesToolStripMenuItem
+            // 
+            this.copyAllSubNodesToolStripMenuItem.Name = "copyAllSubNodesToolStripMenuItem";
+            this.copyAllSubNodesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.copyAllSubNodesToolStripMenuItem.Text = "Copy All SubNodes";
+            this.copyAllSubNodesToolStripMenuItem.Click += new System.EventHandler(this.copyAllSubNodesToolStripMenuItem_Click);
+            // 
+            // batchRenamerToolStripMenuItem
+            // 
+            this.batchRenamerToolStripMenuItem.Name = "batchRenamerToolStripMenuItem";
+            this.batchRenamerToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.batchRenamerToolStripMenuItem.Text = "Batch Renamer";
+            this.batchRenamerToolStripMenuItem.Click += new System.EventHandler(this.batchRenamerToolStripMenuItem_Click);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -332,6 +377,27 @@ namespace JavaDeObfuscator
             this.changelogToolStripMenuItem.Text = "Changelog";
             this.changelogToolStripMenuItem.Click += new System.EventHandler(this.changelogToolStripMenuItem_Click);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuSequentiallyRenamePopup});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(186, 26);
+            // 
+            // mnuSequentiallyRenamePopup
+            // 
+            this.mnuSequentiallyRenamePopup.Name = "mnuSequentiallyRenamePopup";
+            this.mnuSequentiallyRenamePopup.Size = new System.Drawing.Size(185, 22);
+            this.mnuSequentiallyRenamePopup.Text = "Sequentially Rename";
+            this.mnuSequentiallyRenamePopup.Click += new System.EventHandler(this.sequentiallyRenamePopup_Click);
+            // 
+            // extractImportsToolStripMenuItem
+            // 
+            this.extractImportsToolStripMenuItem.Name = "extractImportsToolStripMenuItem";
+            this.extractImportsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.extractImportsToolStripMenuItem.Text = "Extract Imports";
+            this.extractImportsToolStripMenuItem.Click += new System.EventHandler(this.extractImportsToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(629, 451);
@@ -349,9 +415,11 @@ namespace JavaDeObfuscator
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Java DeObfuscator v1.6b2_dz";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -573,11 +641,21 @@ namespace JavaDeObfuscator
 
 		private void TreeClassView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
+
+            TreeClassView.SelectedNode = e.Node;
+
+            if ((e.Node.Text == "Methods" || e.Node.Text == "Fields") && e.Node.Parent.Parent == null && e.Button == MouseButtons.Right )
+            {
+                contextMenuStrip1.Show(MousePosition); //sequential rename menu for individual class methods/fields lists
+                return;
+            }
+
 			// detect right click on a valid member to popup a 'change name' box.
 			if (e.Button == MouseButtons.Right && e.Node.Parent != null && e.Node.Parent.Parent != null)
 			{
 				ChangeName FChangeName = new ChangeName();
-				FChangeName.NameBox.Text = e.Node.Text;
+				FChangeName.NameBox.Text = e.Node.Text;                
+
 				// get the full path of the node we clicked on, so we have all the information
 				// relating to it
 				// get parentmost node
@@ -593,6 +671,8 @@ namespace JavaDeObfuscator
 				{
 					tn = tn.Nodes[0];
 				}
+
+                if (tn.Parent.Tag == null) return; //crash fix dz
 
 				string class_name = pn.Tag.ToString();                   // classname
 
@@ -802,12 +882,18 @@ namespace JavaDeObfuscator
 
         private void directoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string foldername = Properties.Settings.Default.lastDir;
+            if (Directory.Exists(foldername)) folderBrowserDialog1.SelectedPath = foldername;
+
             if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                
                 if (Files == null)
                     Files = new ArrayList();
 
-                string foldername = this.folderBrowserDialog1.SelectedPath;
+                foldername = this.folderBrowserDialog1.SelectedPath;
+                Properties.Settings.Default.lastDir = foldername;
+
                 foreach (string f in Directory.GetFiles(foldername))
                 {
                     if(f.ToLower().EndsWith(".class")) Files.Add(f);
@@ -901,6 +987,143 @@ namespace JavaDeObfuscator
             findAndShow("changelog.txt");
         }
 
+        private void sequentiallyRenamePopup_Click(object sender, EventArgs e)
+        {
 
+            TreeNode selNode = TreeClassView.SelectedNode;
+            if (selNode == null) return;
+
+            if (selNode.Text == "Methods" || selNode.Text == "Fields")
+            {
+                int i = 0;
+                foreach (TreeNode nn in selNode.Nodes)
+                {
+                    if (nn.Text.IndexOf(">") < 1)
+                    {
+                        string nom = (selNode.Text == "Methods" ? "sub_" : "field_");
+                        ChangeMethodOrFieldName(nn, nom + i.ToString());
+                        i++;
+                    }
+                }
+
+            }
+        }
+
+        private void CopySubTree(TreeNode pn, ArrayList al, int nesting, int limit)
+        {
+            string tabs = new string('\t', nesting);
+            foreach (TreeNode n in pn.Nodes)
+            {
+                al.Add(tabs + n.Text);
+                if(limit < nesting || limit == -1) CopySubTree(n, al, nesting+1, limit);
+            }
+        }
+
+        private void copySelectedDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode selNode = TreeClassView.SelectedNode;
+            if (selNode == null)
+            {
+                MessageBox.Show("Select a node to copy...");
+                return;
+            }
+            ArrayList dat = new ArrayList();
+            dat.Add(selNode.Text);
+            CopySubTree(selNode, dat, 1, 1);
+
+            string tmp = "";
+            foreach (String x in dat) tmp += x + "\r\n";
+            Clipboard.SetText(tmp);
+             
+        }
+
+        private void copyAllSubNodesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode selNode = TreeClassView.SelectedNode;
+            if (selNode == null)
+            {
+                MessageBox.Show("Select a node to copy...");
+                return;
+            }
+            ArrayList dat = new ArrayList();
+            dat.Add(selNode.Text);
+            CopySubTree(selNode, dat, 1, -1);
+
+            string tmp = "";
+            foreach (String x in dat) tmp += x + "\r\n";
+            Clipboard.SetText(tmp);
+            //MessageBox.Show(tmp.Length.ToString("x") + " bytes copied.");
+        }
+
+        private void batchRenamerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To do..");
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Properties.Settings.Default.Save();
+        }
+
+        private void extractImportsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArrayList x = new ArrayList();
+            foreach (TreeNode n in TreeClassView.Nodes)
+            {
+                //cycle through each class entry..
+                if (n.Text.Contains("/"))
+                {
+                    string tmp = n.Text.Substring(n.Text.IndexOf("/") + 1);
+                    tmp = tmp.Replace(": java/lang/Object","").Replace('/','.').Replace(":","\t\t\tExtends:").Trim();
+                    x.Add("Class: " + tmp);
+                }
+                else
+                {
+                    x.Add("Class: " + n.Text);
+                }
+
+                TreeNode consts = n.FirstNode;
+                TreeNode classes = consts.Nodes[2];
+                List<String> imports = new List<string>();
+                foreach (TreeNode nn in classes.Nodes)
+                {
+                    if (nn.Index > 0) //skip first entry which is dup of current class name
+                    {
+                        string tmp = nn.Text.Replace("\"","").Replace('/','.');
+                        imports.Add(tmp);
+                    }
+                }
+
+                imports.Sort();
+                string last = "";
+                foreach (String s in imports)
+                {
+                    if(s != last) x.Add("\t" + s);
+                    last = s;
+                }
+                x.Add("");
+
+            }
+
+            DisplayData(x);
+
+
+        }
+
+        private void DisplayData(ArrayList al)
+        {
+            string tmp = "";
+            foreach (String y in al) tmp += y + "\r\n";
+            DisplayData(tmp);
+        }
+
+        private void DisplayData(string tmp)
+        {
+            string pth = Path.GetTempPath() + "\\" + Path.GetRandomFileName();
+            File.WriteAllText(pth, tmp);
+            Process.Start("notepad.exe",  pth );
+        }
 	}
+
+
 }

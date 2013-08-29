@@ -14,5 +14,11 @@ namespace JavaDeObfuscator
         {
             InitializeComponent();
         }
+
+        private void ChangeName_Shown(object sender, EventArgs e)
+        {
+            NameBox.SelectAll();
+            NameBox.Focus();
+        }
     }
 }

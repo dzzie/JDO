@@ -84,6 +84,7 @@ namespace JavaDeObfuscator
             this.Name = "ChangeName";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Change Name...";
+            this.Shown += new System.EventHandler(this.ChangeName_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

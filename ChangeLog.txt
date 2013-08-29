@@ -1,2 +1,10 @@
 
-8.24.13 - dz - added tool bar and sequential rename tools 
+8.28.13
+	bug fix in nodeClick (possible null on some nodes)
+        Tools -> Copy subnodes / copy all subnodes menu items
+        RenameReport.txt now generated in output directory
+        frmChangeName textbox now selectall() and focus() on show
+        add directory stores last path used
+        Tools -> Extract Imports
+
+8.24.13 - added tool bar and sequential rename tools / load directory 
