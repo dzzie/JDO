@@ -14,6 +14,7 @@ namespace JavaDeObfuscator
 		// event delegates
 		public delegate void ProgressHandler(int Progress);
 		public static event ProgressHandler Progress;
+        public ArrayList RenameReport; //dzzie
 
 		// private variables
 		private ArrayList FFiles;
@@ -45,6 +46,7 @@ namespace JavaDeObfuscator
 
 			FThoroughMode = true;
 			FRenameClasses = true;
+            RenameReport = new ArrayList();
 		}
 		public bool DoRename(string Name)
 		{
@@ -109,6 +111,15 @@ namespace JavaDeObfuscator
 			string OriginalClassName = ClassFile.ThisClassName;
 			string OriginalClassAndType = ClassFile.ThisClassName + " : " + ClassFile.SuperClassName;
 
+            if (OriginalClassName.Contains("/"))
+            {
+                RenameReport.Add("Processing Class: " + OriginalClassName.Substring(OriginalClassName.LastIndexOf("/")+1));
+            }
+            else
+            {
+                RenameReport.Add("Processing Class: " + OriginalClassName);
+            }
+
 			// rename the class and add the new class name to the changelist at [1]
 			if (FRenameClasses && RenameStore.GetNewClassNameOnly(OriginalClassAndType) != null)
 			{
@@ -120,6 +131,7 @@ namespace JavaDeObfuscator
 					NewClassName += "_";
 				}
 				FChangeList.Add(ClassFile.ChangeClassName(NewClassName));
+                RenameReport[RenameReport.Count-1] +=  " -> " + NewClassName;
 			}
 			else if (FRenameClasses && DoRename(OriginalClassName))
 			{
@@ -141,6 +153,7 @@ namespace JavaDeObfuscator
 					NewClassName += "_";
 				}
 				FChangeList.Add(ClassFile.ChangeClassName(NewClassName));
+                RenameReport[RenameReport.Count-1] += " -> " + NewClassName;
 			}
 			else
 				FChangeList.Add(OriginalClassName);
@@ -188,6 +201,7 @@ namespace JavaDeObfuscator
 					// set the 
 					mcr.ChangedTo(mi);
 					FChangeList.Add(mcr);
+                    RenameReport.Add("\t" + mcr.OriginalMethod.Name.Value  + " -> " + NewName + "\t(method)");
 				}
 
 				// fix the descriptor regardless
@@ -232,12 +246,14 @@ namespace JavaDeObfuscator
 
 					fcr.ChangedTo(fi);
 					FChangeList.Add(fcr);
+                    RenameReport.Add("\t" + fcr.OriginalField.Name.Value + " -> " + NewName + "\t(field)");
 				}
 
 				// fix the descriptor regardless
 				ClassFile.ChangeFieldType(i, OriginalClassName, ClassFile.ThisClassName);
 			}
-
+            
+            RenameReport.Add("");
 			return FChangeList;
 		}
 		/// <summary>
@@ -662,6 +678,7 @@ namespace JavaDeObfuscator
 				Progress(++curr_progress);
 			}
 
+            SaveRenameMap();
 			return NewFileNameList;
 		}
 
@@ -687,6 +704,18 @@ namespace JavaDeObfuscator
 				FRenameClasses = value;
 			}
 		}
+        private void SaveRenameMap()
+        {
+            string file_name = Path.Combine(this.OutputDir, "RenameMap.txt");
+            if (File.Exists(file_name)) File.Delete(file_name);
+            using(System.IO.StreamWriter file = new System.IO.StreamWriter(file_name))
+            {
+                foreach(string line in RenameReport)
+                {
+                   file.WriteLine(line);  
+                }
+            }
+        }
 	}
 
 	//  ********************************************************************************   //
